@@ -80,15 +80,11 @@ class Player:
         self.cardDeck = []
         
         
-'''      
+'''
 random.shuffle(deck)
 playa = Player()
-
-playa.getCards(deck.pop())
-playa.getCards(deck.pop())
-playa.showCards()
+print(playa.getName())
 '''
-      
 
 def doYouPlay():
     wantToPlay = input('Do yo want to play a game?(yes/no) ') 
@@ -98,6 +94,7 @@ def doYouPlay():
         print(PlayGame())
     else:
         print('End of game')
+        print(doYouPlay())
     
     
 
@@ -110,38 +107,55 @@ def PlayGame():
     comp.endGame()
     newDeck = deck.copy()
     random.shuffle(newDeck)
-    
     Player1.getCards(newDeck.pop())
     comp.getCards(newDeck.pop())
     
+    def printPlayer(player,name):
+        print('\n')
+        print(name)
+        print('-------------------------------')
+        print('{} cards are:'.format(name))
+        player.showCards()
+        print('-------------------------------')
+        print('{} has '.format(name) + str(player.returnBalance()) + ' points' )
     
     while Player1.returnBalance() < 21:
+        printPlayer(Player1,'Player1')
+        
         cardInput = input('Do you want another card? Write "yes" or "no" ')
         if cardInput.lower() == "yes": 
             Player1.getCards(newDeck.pop())
-            print('Player1')
-            print('Your cards are:')
-            Player1.showCards()
-            print('You have ' + str(Player1.returnBalance()) + 'points' )
-            
             if Player1.returnBalance() > 21:
+                printPlayer(Player1,'Player')
                 print('Over 21 ! Player1 lost')
                 doYouPlay()
             elif Player1.returnBalance() == 21:
+                printPlayer(Player1,'Player')
                 print('Player1 won !!' )
                 doYouPlay()
             else:
                 continue
         else:
-            while comp.returnBalance() < Player1.returnBalance():
+            while comp.returnBalance() < 21:
                 comp.getCards(newDeck.pop())
-                if comp.returnBalance() > Player1.returnBalance():
+                if comp.returnBalance() < Player1.returnBalance():
+                    printPlayer(comp,'Computer')
+                    print('Player1 won!')
+                    continue
+                elif comp.returnBalance() > 21:
+                    printPlayer(comp,'Computer')
+                    print('Over 21. Computer lost. Player1 Win')
+                    break
+                elif comp.returnBalance() > Player1.returnBalance():
+                    printPlayer(comp,'Computer')
                     print('Computer Won !!!')
                     break
                 elif comp.returnBalance() < Player1.returnBalance():
+                    printPlayer(comp,'Computer')
                     print('Player1 Won !!!')
                     break
                 else:
+                    printPlayer(comp,'Computer')
                     print('No one won!!!')
                     break
             doYouPlay()
